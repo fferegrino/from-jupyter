@@ -8,6 +8,9 @@ readme = "readme.md"
 homepage = "https://github.com/fferegrino/from-jupyter"
 repository = "https://github.com/fferegrino/from-jupyter"
 
+[tool.poetry.scripts]
+from-jupyter = "from_jupyter.__main__:cli"
+
 [tool.poetry.dependencies]
 python = "^3.8"
 
