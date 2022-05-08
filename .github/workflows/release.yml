@@ -1,0 +1,29 @@
+name: Release Python package
+
+on:
+  tags:
+    - v*
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry install
+    - name: Build package
+      run: poetry build
+    - name: Publish package
+      env:
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: poetry publish -u __token__ -p ${PYPI_PASSWORD} --build
+
