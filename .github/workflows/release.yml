@@ -1,8 +1,9 @@
 name: Release Python package
 
 on:
-  tags:
-    - v*
+  push:
+    tags:
+      - v*
 
 jobs:
   deploy:
