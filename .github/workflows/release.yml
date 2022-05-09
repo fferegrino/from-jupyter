@@ -26,5 +26,5 @@ jobs:
     - name: Publish package
       env:
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: poetry publish -u __token__ -p ${PYPI_PASSWORD} --build
+      run: poetry publish -u __token__ -p ${PYPI_PASSWORD} -n
 
