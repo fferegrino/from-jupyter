@@ -5,17 +5,15 @@ from pathlib import Path
 
 import imgkit
 import jupytext
+from nbformat import NotebookNode
 
 logger = logging.getLogger("export")
 
 
-def export_images(parent_dir: Path, file: Path):
+def export_images(notebook: NotebookNode, parent_dir: Path, file: Path):
 
     image_output_folder = Path(parent_dir, file.stem)
     image_output_folder.mkdir(exist_ok=True)
-
-    with open(file) as w:
-        notebook = jupytext.read(w)
 
     for idx, cell in enumerate(notebook["cells"], 1):
         if (cell["cell_type"] == "code") and (outputs := cell.get("outputs", [])):
@@ -26,14 +24,11 @@ def export_images(parent_dir: Path, file: Path):
                     fh.write(base64.decodebytes(bytes(image_outputs[0]["data"]["image/png"], "utf-8")))
 
 
-def export_dataframes(parent_dir: Path, file: Path):
+def export_dataframes(notebook: NotebookNode, parent_dir: Path, file: Path):
     template = pkgutil.get_data(__name__, "dataframe.html").decode("utf-8")
 
     image_output_folder = Path(parent_dir, file.stem)
     image_output_folder.mkdir(exist_ok=True)
-
-    with open(file) as w:
-        notebook = jupytext.read(w)
 
     for idx, cell in enumerate(notebook["cells"], 1):
         dataframe_name = cell.get("metadata", {}).get("dataframe")
