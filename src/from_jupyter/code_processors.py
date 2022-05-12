@@ -10,18 +10,19 @@ class CodeProcessor:
 
 
 class FileProcessor:
-    def __init__(self, output_directory: Path, endl='\n'):
+    def __init__(self, output_directory: Path, endl="\n"):
         self.output_directory = output_directory
         self.endl = endl
 
     def process_cell(self, cell, metadata, file):
 
         gist = metadata.get("gist")
-        code_output = self.output_directory / file.stem / gist
-        code_output.parent.mkdir(parents=True, exist_ok=True)
+        if gist:
+            code_output = Path(self.output_directory, file.stem, gist)
+            code_output.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(code_output, "w") as w:
-            w.write(cell["source"].rstrip() + self.endl)
+            with open(code_output, "w") as w:
+                w.write(cell["source"].rstrip() + self.endl)
 
 
 class GistProcessor(CodeProcessor):
