@@ -14,3 +14,6 @@ __pycache__/
 # Development stuff
 dist/
 .idea/
+
+# from-jupyter exported
+output/

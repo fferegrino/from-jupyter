@@ -4,7 +4,7 @@ import click
 import jupytext
 
 from from_jupyter.code import process_code_cells
-from from_jupyter.code_processors import FileProcessor, GistProcessor
+from from_jupyter.code_processors import FileProcessor, GistProcessor, PngProcessor, RtfProcessor
 from from_jupyter.export import export_dataframes, export_images
 
 
@@ -40,12 +40,19 @@ def gist(file, personal_token):
 
 @cli.command()
 @click.argument("file")
+@click.option("--format", type=click.Choice(["plain", "rtf", "png"], case_sensitive=False), default="plain")
 @click.pass_context
-def code(ctx, file):
+def code(ctx, file, format):
     """Export your code snippets as GitHub gists"""
     file = Path(file)
     notebook = load_notebook(file)
-    gist_processor = FileProcessor(ctx.obj["output_dir"])
+    if format == "plain":
+        gist_processor = FileProcessor(ctx.obj["output_dir"])
+    elif format == "rtf":
+        gist_processor = RtfProcessor(ctx.obj["output_dir"])
+    elif format == "png":
+        gist_processor = PngProcessor(ctx.obj["output_dir"])
+
     process_code_cells(notebook, file, gist_processor)
 
 
