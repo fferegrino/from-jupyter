@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "from-jupyter"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Antonio Feregrino <antonio.feregrino@gmail.com>"]
 description = "Blogging from Jupyter notebooks"
 license = "MIT"
