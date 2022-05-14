@@ -68,12 +68,13 @@ def images(ctx, file):
 
 @cli.command()
 @click.argument("file")
+@click.option("--style", "-s", type=click.Path(exists=True, dir_okay=False))
 @click.pass_context
-def frames(ctx, file):
+def frames(ctx, file, style=None):
     """Export your dataframes as images"""
     file = Path(file)
     notebook = load_notebook(file)
-    export_dataframes(notebook, ctx.obj["output_dir"], file)
+    export_dataframes(notebook, ctx.obj["output_dir"], file, style_file=style)
 
 
 if __name__ == "__main__":

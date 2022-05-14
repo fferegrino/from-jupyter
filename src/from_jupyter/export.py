@@ -2,6 +2,7 @@ import base64
 import logging
 import pkgutil
 from pathlib import Path
+from typing import Optional
 
 import imgkit
 import jupytext
@@ -24,8 +25,26 @@ def export_images(notebook: NotebookNode, parent_dir: Path, file: Path):
                     fh.write(base64.decodebytes(bytes(image_outputs[0]["data"]["image/png"], "utf-8")))
 
 
-def export_dataframes(notebook: NotebookNode, parent_dir: Path, file: Path):
-    template = pkgutil.get_data(__name__, "dataframe.html").decode("utf-8")
+TEMPLATE = """<html>
+    <head>
+        <style>
+{{STYLE}}
+        </style>
+    </head>
+    <body>
+{{DATAFRAME}}
+    </body>
+</html>
+"""
+
+
+def export_dataframes(notebook: NotebookNode, parent_dir: Path, file: Path, style_file: Optional[Path] = None):
+
+    if not style_file:
+        css = pkgutil.get_data(__name__, "dataframe.css").decode("utf-8")
+    else:
+        with open(style_file) as r:
+            css = r.read()
 
     image_output_folder = Path(parent_dir, file.stem)
     image_output_folder.mkdir(exist_ok=True)
@@ -36,8 +55,13 @@ def export_dataframes(notebook: NotebookNode, parent_dir: Path, file: Path):
             image_outputs = [output for output in outputs if ("data" in output) and "text/html" in output["data"]]
             if len(image_outputs) > 0:
                 options = {"zoom": 2, "quality": 100, "quiet": ""}
+
+                html = TEMPLATE.replace("{{DATAFRAME}}", image_outputs[0]["data"]["text/html"]).replace(
+                    "{{STYLE}}", css
+                )
+
                 imgkit.from_string(
-                    template.replace("{{DATAFRAME}}", image_outputs[0]["data"]["text/html"]),
+                    html,
                     image_output_folder / dataframe_name,
                     options=options,
                 )
