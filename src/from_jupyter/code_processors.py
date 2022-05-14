@@ -78,5 +78,5 @@ class GistProcessor(CodeProcessor):
         if gist_id:
             gist_id = self.gist_client.update_gist(gist_id, description, new_file_name, cell["source"])
         elif gist:
-            gist_id = self.gist_client.gist_client.publish_gist(description, new_file_name, cell["source"])
+            gist_id = self.gist_client.publish_gist(description, new_file_name, cell["source"])
         metadata["gist_id"] = gist_id
