@@ -6,6 +6,7 @@ import jupytext
 from from_jupyter.code import process_code_cells
 from from_jupyter.code_processors import FileProcessor, GistProcessor, PngProcessor, RtfProcessor
 from from_jupyter.export import export_dataframes, export_images
+from from_jupyter.html import to_html
 
 
 def load_notebook(path: Path):
@@ -75,6 +76,16 @@ def frames(ctx, file, style=None):
     file = Path(file)
     notebook = load_notebook(file)
     export_dataframes(notebook, ctx.obj["output_dir"], file, style_file=style)
+
+
+@cli.command()
+@click.argument("file")
+@click.pass_context
+def html(ctx, file):
+    """Export your images out of your Jupyter Notebook"""
+    file = Path(file)
+    notebook = load_notebook(file)
+    to_html(notebook, ctx.obj["output_dir"], file)
 
 
 if __name__ == "__main__":
